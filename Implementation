@@ -1,0 +1,268 @@
+Implementation Plan: SIMAUD-LEX Frontend
+Modern React TypeScript admin panel for the SIMAUD-LEX Legal Tech platform with JWT authentication, professional design, and full backend integration.
+
+User Review Required
+IMPORTANT
+
+Directory Location: The frontend will be created in /home/david/simaud-lex-frontend (separate from the backend at /home/david/simaud-lex-backend).
+
+IMPORTANT
+
+Backend Configuration: The frontend will connect to the backend API at http://localhost:3000. Please confirm if this is correct or provide the actual backend URL.
+
+NOTE
+
+Design Specifications: Using the provided color palette:
+
+Primary: Navy Blue (#1e293b) for sidebar and main buttons
+Accent: Orange (#f97316) for action buttons
+Background: Light Gray (#f8fafc)
+Layout: Fixed left sidebar with Dashboard, Simulaciones, Casos, Biblioteca sections
+Proposed Changes
+Project Initialization
+[NEW] Frontend Project Setup
+Initialize Vite + React + TypeScript project in /home/david/simaud-lex-frontend
+Configure with non-interactive mode for automated setup
+Install core dependencies: react-router-dom, axios, @tanstack/react-query, zustand
+Install UI dependencies: @radix-ui/\* packages for Shadcn/UI components
+Configure Tailwind CSS with custom theme matching design specifications
+Core Infrastructure
+[NEW]
+api.ts
+Axios instance with JWT interceptor for all API requests. Handles:
+
+Base URL configuration
+JWT token attachment to headers
+Token refresh logic
+Error handling and 401 redirects
+[NEW]
+auth.context.tsx
+Authentication context providing:
+
+Login/logout functions
+User state management
+JWT token storage (localStorage)
+Protected route logic
+[NEW]
+ProtectedRoute.tsx
+Route wrapper component that redirects unauthenticated users to login
+
+Layout Components
+[NEW]
+Layout.tsx
+Main application layout with:
+
+Fixed sidebar (240px width, navy blue #1e293b)
+Top header with user info
+Main content area with light gray background (#f8fafc)
+[NEW]
+Sidebar.tsx
+Navigation sidebar with menu items:
+
+Dashboard (home icon)
+Simulaciones (calculator icon)
+Casos (folder icon)
+Biblioteca (book icon) Active state highlighting with orange accent
+[NEW]
+Header.tsx
+Top header bar with:
+
+Page title
+User profile dropdown
+Logout button
+UI Components (Shadcn/UI)
+[NEW]
+button.tsx
+Reusable button component with variants:
+
+Primary (navy blue)
+Accent (orange for "Nuevo Caso")
+Ghost, outline variants
+[NEW]
+card.tsx
+Card component for dashboard metrics and content sections
+
+[NEW]
+table.tsx
+Table component for displaying cases and data lists
+
+[NEW]
+dialog.tsx
+Modal dialog for forms and confirmations
+
+[NEW]
+form.tsx
+Form components with validation using react-hook-form and zod
+
+[NEW]
+input.tsx
+Input field component with error states
+
+Pages
+[NEW]
+LoginPage.tsx
+Login page with:
+
+Email and password fields
+"Iniciar Sesión" button
+Link to register page
+Calls /auth/login endpoint
+[NEW]
+RegisterPage.tsx
+Registration page with:
+
+Name, email, password fields
+"Registrarse" button
+Calls /auth/singin endpoint
+[NEW]
+DashboardPage.tsx
+Dashboard with metrics cards:
+
+Total cases count
+Active cases count
+NNA (children) count
+Recent activity list Uses mock data initially, with API integration hooks
+[NEW]
+CasosPage.tsx
+Cases management page with:
+
+Table of ProcesoJudicial entities
+"Nuevo Caso" button (orange accent)
+Filter and search functionality
+Modal for creating/editing cases
+[NEW]
+SimulacionesPage.tsx
+Simulations page with:
+
+Calculator interface for legal simulations
+Form inputs for simulation parameters
+Results display area
+[NEW]
+BibliotecaPage.tsx
+Library/resources page with:
+
+Document list
+Search and filter
+Categories sidebar
+Forms
+[NEW]
+NnaForm.tsx
+Form for creating/editing NNA (Niño, Niña, Adolescente):
+
+nombre_completo (text)
+fecha_nacimiento (date)
+opinion_nna (textarea)
+necesidades_especiales (multi-select)
+[NEW]
+PersonForm.tsx
+Form for Person entity:
+
+cedula (text)
+nombre_completo (text)
+recursos_economicos (number)
+ocupacion (text)
+entorno_hogar (textarea)
+[NEW]
+ProcesoJudicialForm.tsx
+Form for legal process:
+
+fecha_inicio (date)
+estado (select: EstadoProceso enum)
+tipo_demanda (select: TipoDemanda enum)
+nna (select from NNA list)
+Routing
+[NEW]
+App.tsx
+Main app component with React Router setup:
+
+Public routes: /login, /register
+Protected routes: /dashboard, /casos, /simulaciones, /biblioteca
+Default redirect to /dashboard when authenticated
+Styling
+[NEW]
+index.css
+Global styles with Tailwind directives and custom CSS variables:
+
+Color palette configuration
+Typography (Inter font from Google Fonts)
+Smooth transitions and hover effects
+Glassmorphism effects for cards
+[NEW]
+tailwind.config.js
+Tailwind configuration with custom theme:
+
+Navy blue primary color
+Orange accent color
+Light gray backgrounds
+Custom spacing and border radius
+Configuration Files
+[NEW]
+vite.config.ts
+Vite configuration with:
+
+React plugin
+Path aliases (@/ for src/)
+Development server on port 5173
+[NEW]
+tsconfig.json
+TypeScript configuration with strict mode and path mapping
+
+[NEW]
+package.json
+Dependencies and scripts
+
+[NEW]
+.env
+Environment variables:
+
+VITE_API_URL=http://localhost:3000
+Verification Plan
+Automated Tests
+Build Verification
+
+cd /home/david/simaud-lex-frontend
+npm run build
+Verify that the production build completes without errors.
+
+TypeScript Type Checking
+
+cd /home/david/simaud-lex-frontend
+npx tsc --noEmit
+Verify no TypeScript errors.
+
+Manual Verification
+Development Server
+
+Start backend: cd /home/david/simaud-lex-backend && npm run start:dev
+Start frontend: cd /home/david/simaud-lex-frontend && npm run dev
+Open browser to http://localhost:5173
+Authentication Flow
+
+Register a new user via /register page
+Verify redirect to dashboard after successful registration
+Logout and login with created credentials
+Verify JWT token is stored and attached to API requests (check Network tab)
+Protected Routes
+
+Attempt to access /dashboard without authentication
+Verify redirect to /login
+Login and verify access to all protected routes
+UI/UX Verification
+
+Verify color palette matches specifications (navy #1e293b, orange #f97316, light gray #f8fafc)
+Check sidebar navigation works correctly
+Verify responsive design on mobile/tablet/desktop
+Test hover effects and transitions
+Verify "Nuevo Caso" button has orange accent color
+API Integration
+
+Create a new NNA via form
+Verify data appears in backend database
+Create a new Proceso Judicial
+Verify relationships are correctly established
+Check dashboard metrics update correctly
+Browser Testing
+
+Test in Chrome, Firefox, Safari
+Verify no console errors
+Check responsive design at various breakpoints
