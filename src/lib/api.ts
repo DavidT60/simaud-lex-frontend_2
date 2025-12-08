@@ -95,6 +95,14 @@ export const procesoJudicialAPI = {
     const response = await api.delete(`/proceso-judicial/${id}`);
     return response.data;
   },
+  simularSentencia: async (id: string, data?: {
+    montoSolicitado?: number;
+    notasAdicionales?: string;
+    recursosDemandadoEstimados?: number;
+  }) => {
+    const response = await api.post(`/proceso-judicial/${id}/simular-sentencia`, data || {});
+    return response.data;
+  },
 };
 
 // Person API
