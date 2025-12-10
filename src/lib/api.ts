@@ -95,12 +95,16 @@ export const procesoJudicialAPI = {
     const response = await api.delete(`/proceso-judicial/${id}`);
     return response.data;
   },
-  simularSentencia: async (id: string, data?: {
-    montoSolicitado?: number;
-    notasAdicionales?: string;
-    recursosDemandadoEstimados?: number;
-  }) => {
-    const response = await api.post(`/proceso-judicial/${id}/simular-sentencia`, data || {});
+  simularSentencia: async (id: string, data: any) => {
+    const response = await api.post(`/proceso-judicial/${id}/simular-sentencia`, data);
+    return response.data;
+  },
+  getHistorialSimulaciones: async (id: string) => {
+    const response = await api.get(`/proceso-judicial/${id}/historial-simulaciones`);
+    return response.data;
+  },
+  getSimulacionById: async (simulacionId: string) => {
+    const response = await api.get(`/proceso-judicial/simulacion/${simulacionId}`);
     return response.data;
   },
 };
