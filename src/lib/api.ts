@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://simaud-lex-backend.onrender.com/";
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -96,15 +97,22 @@ export const procesoJudicialAPI = {
     return response.data;
   },
   simularSentencia: async (id: string, data: any) => {
-    const response = await api.post(`/proceso-judicial/${id}/simular-sentencia`, data);
+    const response = await api.post(
+      `/proceso-judicial/${id}/simular-sentencia`,
+      data
+    );
     return response.data;
   },
   getHistorialSimulaciones: async (id: string) => {
-    const response = await api.get(`/proceso-judicial/${id}/historial-simulaciones`);
+    const response = await api.get(
+      `/proceso-judicial/${id}/historial-simulaciones`
+    );
     return response.data;
   },
   getSimulacionById: async (simulacionId: string) => {
-    const response = await api.get(`/proceso-judicial/simulacion/${simulacionId}`);
+    const response = await api.get(
+      `/proceso-judicial/simulacion/${simulacionId}`
+    );
     return response.data;
   },
 };
