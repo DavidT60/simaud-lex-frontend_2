@@ -57,6 +57,7 @@ export const CasosPage = () => {
   const filteredCasos = casos.filter((caso) => {
     const searchLower = searchTerm.toLowerCase();
     return (
+      caso.id_caso_dinamico?.toLowerCase().includes(searchLower) ||
       caso.nna?.nombre_completo?.toLowerCase().includes(searchLower) ||
       caso.tipo_demanda?.toLowerCase().includes(searchLower) ||
       caso.estado?.toLowerCase().includes(searchLower)
@@ -68,8 +69,8 @@ export const CasosPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-primary-900">Casos</h1>
-            <p className="text-primary-600 mt-2">
+            <h1 className="text-3xl font-bold text-primary-900 dark:text-white">Casos</h1>
+            <p className="text-primary-600 dark:text-gray-400 mt-2">
               Gestión de procesos judiciales
             </p>
           </div>
@@ -88,9 +89,9 @@ export const CasosPage = () => {
           <CardHeader>
             <div className="flex items-center gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-400 dark:text-gray-500 w-4 h-4" />
                 <Input
-                  placeholder="Buscar casos..."
+                  placeholder="Buscar por ID Caso, NNA, tipo..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -103,20 +104,23 @@ export const CasosPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-primary-200">
-                    <th className="text-left py-3 px-4 font-semibold text-primary-700">
+                  <tr className="border-b border-primary-200 dark:border-gray-700">
+                    <th className="text-left py-3 px-4 font-semibold text-primary-700 dark:text-gray-300">
+                      ID Caso
+                    </th>
+                    <th className="text-left py-3 px-4 font-semibold text-primary-700 dark:text-gray-300">
                       NNA
                     </th>
-                    <th className="text-left py-3 px-4 font-semibold text-primary-700">
+                    <th className="text-left py-3 px-4 font-semibold text-primary-700 dark:text-gray-300">
                       Tipo
                     </th>
-                    <th className="text-left py-3 px-4 font-semibold text-primary-700">
+                    <th className="text-left py-3 px-4 font-semibold text-primary-700 dark:text-gray-300">
                       Estado
                     </th>
-                    <th className="text-left py-3 px-4 font-semibold text-primary-700">
+                    <th className="text-left py-3 px-4 font-semibold text-primary-700 dark:text-gray-300">
                       Fecha Inicio
                     </th>
-                    <th className="text-left py-3 px-4 font-semibold text-primary-700">
+                    <th className="text-left py-3 px-4 font-semibold text-primary-700 dark:text-gray-300">
                       Acciones
                     </th>
                   </tr>
@@ -124,13 +128,13 @@ export const CasosPage = () => {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan={5} className="text-center py-8 text-gray-500">
+                      <td colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">
                         Cargando casos...
                       </td>
                     </tr>
                   ) : filteredCasos.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="text-center py-8 text-gray-500">
+                      <td colSpan={6} className="text-center py-8 text-gray-500 dark:text-gray-400">
                         No se encontraron casos
                       </td>
                     </tr>
@@ -138,12 +142,15 @@ export const CasosPage = () => {
                     filteredCasos.map((caso) => (
                       <tr
                         key={caso.id}
-                        className="border-b border-primary-100 hover:bg-primary-50 transition-colors"
+                        className="border-b border-primary-100 dark:border-gray-700 hover:bg-primary-50 dark:hover:bg-gray-700/50 transition-colors"
                       >
-                        <td className="py-3 px-4 font-medium text-primary-900">
+                        <td className="py-3 px-4 font-mono text-sm font-medium text-primary-900 dark:text-white">
+                          {caso.id_caso_dinamico || 'N/A'}
+                        </td>
+                        <td className="py-3 px-4 font-medium text-primary-900 dark:text-gray-200">
                           {caso.nna?.nombre_completo || "Sin NNA"}
                         </td>
-                        <td className="py-3 px-4 text-primary-700">
+                        <td className="py-3 px-4 text-primary-700 dark:text-gray-300">
                           {caso.tipo_demanda}
                         </td>
                         <td className="py-3 px-4">
@@ -155,17 +162,26 @@ export const CasosPage = () => {
                             {caso.estado}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-primary-700">
+                        <td className="py-3 px-4 text-primary-700 dark:text-gray-300">
                           {new Date(caso.fecha_inicio).toLocaleDateString()}
                         </td>
                         <td className="py-3 px-4">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleViewDetails(caso.id)}
-                          >
-                            Ver Detalles
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleViewDetails(caso.id)}
+                            >
+                              Ver Detalles
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => window.open(`/casos/${caso.id}`, '_blank')}
+                            >
+                              Ver Caso Completo
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))

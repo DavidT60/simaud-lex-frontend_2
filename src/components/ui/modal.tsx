@@ -41,30 +41,35 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div
-        ref={modalRef}
-        className={cn(
-          "bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200",
-          className
-        )}
-        role="dialog"
-        aria-modal="true"
-      >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700"
-          >
-            <X className="h-4 w-4" />
-            <span className="sr-only">Cerrar</span>
-          </Button>
+    <>
+      <div className="fixed inset-0 bg-black/70 dark:bg-black/80 backdrop-blur-sm z-50" onClick={onClose} />
+        
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div 
+          ref={modalRef}
+          className={cn(
+            "bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md p-6 relative animate-in fade-in zoom-in duration-200",
+            "border border-gray-200 dark:border-gray-700",
+            className
+          )}
+          role="dialog"
+          aria-modal="true"
+          onClick={e => e.stopPropagation()}
+        >
+          {title && (
+            <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
+              <button
+                onClick={onClose}
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+          {children}
         </div>
-        <div className="p-6">{children}</div>
       </div>
-    </div>
+    </>
   );
 };

@@ -1,16 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/auth.context';
+import { ThemeProvider } from './contexts/theme.context';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { CasosPage } from './pages/CasosPage';
+import { CaseDetailPage } from './pages/CaseDetailPage';
 import { SimulacionesPage } from './pages/SimulacionesPage';
 import { BibliotecaPage } from './pages/BibliotecaPage';
 
 function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           {/* Public Routes */}
@@ -31,6 +34,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CasosPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/casos/:id"
+            element={
+              <ProtectedRoute>
+                <CaseDetailPage />
               </ProtectedRoute>
             }
           />
@@ -57,6 +68,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 
