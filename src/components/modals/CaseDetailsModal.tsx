@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { procesoJudicialAPI } from "@/lib/api";
+import { Gavel } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
 
 interface CaseDetailsModalProps {
   isOpen: boolean;
@@ -108,6 +110,26 @@ export const CaseDetailsModal: React.FC<CaseDetailsModalProps> = ({
               <p className="text-gray-500 italic">No hay información del NNA asociada.</p>
             )}
           </div>
+
+            {/* Sentencia Generada */}
+            {caseData.sentencia ? (
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4 shadow-sm mt-4">
+                <h3 className="font-serif font-semibold text-slate-900 mb-2 flex items-center gap-2 text-md border-b border-slate-200 pb-2">
+                    <Gavel className="w-4 h-4 text-slate-700" />
+                    Fallo de Sentencia (Generado por IA)
+                </h3>
+                <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed font-serif">
+                    <ReactMarkdown>{caseData.sentencia.fallo}</ReactMarkdown>
+                </div>
+              </div>
+            ) : caseData.estado === 'SENTENCIA' ? (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 shadow-sm mt-4">
+                    <p className="text-yellow-800 font-medium flex items-center gap-2 text-sm">
+                       <Gavel className="w-4 h-4" />
+                       Documento de sentencia no encontrado.
+                    </p>
+                </div>
+            ) : null}
 
           {/* Parties Info - Placeholder if API doesn't return relations yet */}
           {/* Assuming 'partes' might be in the response based on entity definition */}

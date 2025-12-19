@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, FolderOpen, Book, Scale } from 'lucide-react';
+import { Home, Sparkles, FolderOpen, Book, Scale, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const menuItems = [
@@ -7,6 +7,7 @@ const menuItems = [
   { name: 'Simulaciones', path: '/simulaciones', icon: Sparkles },
   { name: 'Casos', path: '/casos', icon: FolderOpen },
   { name: 'Biblioteca', path: '/biblioteca', icon: Book },
+  { name: 'Config. Reglas', path: '/configuracion-reglas', icon: Settings }, // Added Settings
 ];
 
 export const Sidebar = () => {

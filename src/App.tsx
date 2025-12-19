@@ -9,6 +9,7 @@ import { CasosPage } from './pages/CasosPage';
 import { CaseDetailPage } from './pages/CaseDetailPage';
 import { SimulacionesPage } from './pages/SimulacionesPage';
 import { BibliotecaPage } from './pages/BibliotecaPage';
+import { RuleConfigPage } from './pages/RuleConfigPage';
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <BibliotecaPage />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/configuracion-reglas"
+            element={
+              <ProtectedRoute>
+                <RuleConfigPage />
               </ProtectedRoute>
             }
           />

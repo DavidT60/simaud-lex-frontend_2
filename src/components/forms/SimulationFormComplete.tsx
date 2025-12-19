@@ -18,6 +18,11 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+  // Animation states
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingField, setProcessingField] = useState<string>('');
+  const [processingStep, setProcessingStep] = useState(0);
+  
   // Case search states
   const [casoSearchTerm, setCasoSearchTerm] = useState('');
   const [isCasoListOpen, setIsCasoListOpen] = useState(false);
@@ -117,7 +122,61 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
         pruebas_son_insuficientes: data.pruebas_son_insuficientes === 'true',
       };
       
-      const result = await procesoJudicialAPI.simularSentencia(selectedCaso.id, simulationData);
+      
+      // Animation sequence
+      setIsProcessing(true);
+      
+      // Helper for safe number conversion
+      const safeNumber = (val: any) => {
+        if (!val) return 0;
+        const num = Number(val);
+        return isNaN(num) ? 0 : num;
+      };
+
+      // Sanitize data before sending
+      const sanitizedData = {
+        ...simulationData,
+        montoSolicitado: data.montoSolicitado ? Number(data.montoSolicitado) : undefined,
+        recursosDemandadoEstimados: data.recursosDemandadoEstimados ? Number(data.recursosDemandadoEstimados) : undefined,
+        edad_del_menor: safeNumber(data.edad_del_menor),
+        distancia_entre_domicilios: safeNumber(data.distancia_entre_domicilios),
+        nivel_de_ingresos: safeNumber(data.nivel_de_ingresos),
+      };
+      
+      // Start API call concurrently
+      // Attach a catch handler to avoid "Uncaught (in promise)" if it fails during animation
+      const apiPromise = procesoJudicialAPI.simularSentencia(selectedCaso.id, sanitizedData)
+        .catch(err => {
+            // We want to re-throw this error later when we await it
+            throw err;
+        });
+
+      const simulationFields = [
+        "Identificando reglas aplicables...",
+        "Validando atributos del menor...",
+        "Analizando condiciones de vivienda...",
+        "Verificando ingresos del demandado...",
+        "Calculando montos de manutención...",
+        "Consultando base legal...",
+        "Generando razonamiento jurídico...",
+        "Finalizando simulación..."
+      ];
+
+      for (let i = 0; i < simulationFields.length; i++) {
+        setProcessingField(simulationFields[i]);
+        setProcessingStep(i + 1);
+        try {
+            // Check if API already failed (optimization: stop animation early if error)
+            // But promises don't expose state easily without race.
+            // Just continue animation. 
+            await new Promise(resolve => setTimeout(resolve, 600)); 
+        } catch (e) { break; }
+      }
+
+      // Wait for API result
+      // If apiPromise rejected, this await will throw and go to the main catch block
+      const result = await apiPromise;
+      setIsProcessing(false);
       onSimulationComplete(result);
       
       // Reset form
@@ -125,7 +184,29 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
       setSelectedCaso(null);
     } catch (err: any) {
       console.error('Error en simulación:', err);
-      setError(err.response?.data?.message || 'Error al generar simulación');
+      
+      // Extract validation messages based on AllExceptionsFilter structure:
+      // { statusCode: 400, error: { message: [...] }, timestamp: ... }
+      const backendError = err.response?.data?.error;
+      
+      if (backendError?.message) {
+         console.error("Backend Validation Errors:", backendError.message);
+      }
+      
+      let errorMessage = 'Error al generar simulación';
+      if (backendError?.message) {
+        // If it's an array (class-validator), join them
+        if (Array.isArray(backendError.message)) {
+            errorMessage = backendError.message.join(', ');
+        } else {
+            errorMessage = backendError.message;
+        }
+      } else if (err.response?.data?.message) {
+          // Fallback if structure is different
+          errorMessage = err.response.data.message;
+      }
+      
+      setError(errorMessage);
     }
   };
 
@@ -143,6 +224,33 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
     setCasoSearchTerm(`${caso.id_caso_dinamico} - ${caso.nna?.nombre_completo || 'Sin NNA'}`);
     setValue('casoId', caso.id);
     setIsCasoListOpen(false);
+
+    // Autofill data from NNA if available
+    if (caso.nna) {
+      // 1. Calculate Age
+      if (caso.nna.fecha_nacimiento) {
+        const birthDate = new Date(caso.nna.fecha_nacimiento);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        setValue('edad_del_menor', age);
+      }
+
+      // 2. Special Needs
+      if (caso.nna.necesidades_especiales && Array.isArray(caso.nna.necesidades_especiales)) {
+         const hasSpecialNeeds = caso.nna.necesidades_especiales.length > 0;
+         setValue('menor_tiene_necesidades_especiales', hasSpecialNeeds ? 'true' : 'false');
+      }
+      
+      // 3. Pre-open sections based on relevance
+      setSectionsOpen(prev => ({
+          ...prev,
+          menor: true // Open the section to show the filled data
+      }));
+    }
   };
 
   if (loading) {
@@ -603,6 +711,46 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
                 'Generar Simulación Completa'
               )}
             </Button>
+          </div>
+        </div>
+      )}
+      {/* Processing Overlay Animation */}
+      {isProcessing && (
+        <div className="fixed inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-6 backdrop-blur-sm">
+          <div className="w-full max-w-md space-y-8">
+            <div className="flex flex-col items-center">
+              <div className="relative w-24 h-24 mb-6">
+                <div className="absolute inset-0 border-4 border-primary-200 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 border-4 border-t-primary-600 rounded-full animate-spin"></div>
+                <Loader2 className="absolute inset-0 m-auto w-10 h-10 text-primary-600" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Simulando Sentencia</h3>
+              <p className="text-gray-500 text-center mb-8">El motor de inferencia está analizando el caso...</p>
+              
+              <div className="w-full bg-gray-100 rounded-full h-2 mb-4 overflow-hidden">
+                <div 
+                  className="h-full bg-primary-600 transition-all duration-300 ease-out"
+                  style={{ width: `${Math.min(processingStep * 10, 100)}%` }}
+                />
+              </div>
+              
+              <div className="h-8 flex custom-processing-text items-center justify-center">
+                <p className="text-sm font-medium text-primary-700 animate-pulse">
+                  {processingField && `Analizando: ${processingField}`}
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 text-xs opacity-50">
+               {/* Decorative background elements to look like processing data */}
+               <div className="font-mono text-gray-400">Verificando Idoneidad Moral...</div>
+               <div className="font-mono text-gray-400 text-right">OK</div>
+               <div className="font-mono text-gray-400">Calculando Ingresos...</div>
+               <div className="font-mono text-gray-400 text-right">OK</div>
+               <div className="font-mono text-gray-400">Validando Documentos...</div>
+               <div className="font-mono text-gray-400 text-right">PENDIENTE</div>
+            </div>
           </div>
         </div>
       )}

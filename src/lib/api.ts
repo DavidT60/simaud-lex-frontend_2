@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "https://simaud-lex-backend.onrender.com/";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -29,6 +28,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      // Alert user about session expiration
+      alert("Su sesión ha expirado. Por favor inicie sesión nuevamente.");
+
       // Clear token and redirect to login
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");
@@ -82,6 +84,8 @@ export const procesoJudicialAPI = {
   },
   getOne: async (id: string) => {
     const response = await api.get(`/proceso-judicial/${id}`);
+    console.log("Middleware connecting APO Simulation...");
+    console.log(response.data);
     return response.data;
   },
   create: async (data: any) => {

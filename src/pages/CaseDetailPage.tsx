@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Gavel } from "lucide-react";
 import { procesoJudicialAPI } from "@/lib/api";
+import ReactMarkdown from 'react-markdown';
 
 export const CaseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -203,6 +204,36 @@ export const CaseDetailPage = () => {
               </CardContent>
             </Card>
 
+
+
+            {caseData.sentencia ? (
+              <Card className="border-2 border-primary-200 bg-slate-50">
+                <CardHeader>
+                  <h2 className="text-xl font-semibold text-primary-900 flex items-center gap-2">
+                    <Gavel className="w-6 h-6" />
+                    Fallo de Sentencia (Generado por IA)
+                  </h2>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed font-serif p-4 bg-white rounded-lg border border-gray-200">
+                    <ReactMarkdown>{caseData.sentencia.fallo}</ReactMarkdown>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : caseData.estado === 'SENTENCIA' ? (
+              <Card className="border-2 border-yellow-200 bg-yellow-50">
+                 <CardContent className="p-6">
+                    <p className="text-yellow-800 font-medium flex items-center gap-2">
+                       <Gavel className="w-5 h-5" />
+                       El caso está marcado como SENTENCIA, pero no se encontró el documento de fallo asociado.
+                    </p>
+                    <p className="text-sm text-yellow-700 mt-1">
+                       Esto puede ocurrir si la simulación no se guardó correctamente. Intente generar la simulación nuevamente.
+                    </p>
+                 </CardContent>
+              </Card>
+            ) : null}
+            
             {/* Parties Involved */}
             {caseData.partes && caseData.partes.length > 0 && (
               <Card>

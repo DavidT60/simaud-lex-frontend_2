@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Sparkles, TrendingUp, DollarSign, Calendar, Receipt, Loader2, History, FileText } from 'lucide-react';
+import { Sparkles, TrendingUp, DollarSign, Calendar, Receipt, Loader2, History, FileText, Gavel } from 'lucide-react';
 import { SimulationFormComplete } from '@/components/forms/SimulationFormComplete';
 import { procesoJudicialAPI } from '@/lib/api';
+import ReactMarkdown from 'react-markdown';
 
 export const SimulacionesPage = () => {
   const [simulationResult, setSimulationResult] = useState<any>(null);
@@ -186,18 +187,20 @@ export const SimulacionesPage = () => {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-primary-600 to-accent-500 rounded-lg p-6 text-white mb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <DollarSign className="w-6 h-6" />
-                    <p className="text-sm font-medium opacity-90">Monto Sugerido</p>
+
+
+                {/* Sentencia Generada por IA */}
+                {simulationResult.sentenciaFormal && (
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-4 shadow-sm">
+                    <h4 className="font-serif font-semibold text-slate-900 mb-4 flex items-center gap-2 text-lg border-b border-slate-200 pb-2">
+                       <Gavel className="w-5 h-5 text-slate-700" />
+                       Fallo de la Sentencia (Simulación IA)
+                    </h4>
+                    <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed font-serif">
+                      <ReactMarkdown>{simulationResult.sentenciaFormal}</ReactMarkdown>
+                    </div>
                   </div>
-                  <p className="text-4xl font-bold">
-                    {formatCurrency(simulationResult.simulacion.montoSugerido)}
-                  </p>
-                  <p className="text-sm opacity-90 mt-1">
-                    {simulationResult.simulacion.moneda}
-                  </p>
-                </div>
+                )}
 
                 {/* Reasoning */}
                 <div>
@@ -232,6 +235,12 @@ export const SimulacionesPage = () => {
                         <p className="text-gray-600 font-medium">Recursos del Demandado</p>
                         <p className="text-gray-900 mt-1">
                           {formatCurrency(simulationResult.simulacion.datosConsiderados.recursosDemandado || 0)}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-3 rounded">
+                        <p className="text-gray-600 font-medium">Monto Sugerido (Referencia)</p>
+                        <p className="text-gray-900 mt-1">
+                          {formatCurrency(simulationResult.simulacion.montoSugerido)} {simulationResult.simulacion.moneda}
                         </p>
                       </div>
                       {simulationResult.simulacion.datosConsiderados.montoSolicitadoUsuario && (
