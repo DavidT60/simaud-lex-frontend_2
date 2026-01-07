@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Sparkles, TrendingUp, DollarSign, Calendar, Receipt, Loader2, History, FileText, Gavel } from 'lucide-react';
-import { SimulationFormComplete } from '@/components/forms/SimulationFormComplete';
+import { SimulationWizardForm } from '@/components/forms/SimulationWizardForm';
+import { SimilarCasesList } from '@/components/simulation/SimilarCasesList';
 import { procesoJudicialAPI } from '@/lib/api';
 import ReactMarkdown from 'react-markdown';
 
@@ -56,6 +57,7 @@ export const SimulacionesPage = () => {
   const handleViewSimulationDetail = async (simulacionId: string) => {
     try {
       const simulacion = await procesoJudicialAPI.getSimulacionById(simulacionId);
+      const casosSimilares = await procesoJudicialAPI.getCasosSimilaresBySimulacion(simulacionId);
       
       // Convert the HechosSimulacion to a simulation result format
       const simulationResultFormat = {
@@ -76,7 +78,8 @@ export const SimulacionesPage = () => {
             notasUsuario: simulacion.notasAdicionales
           }
         },
-        fechaSimulacion: simulacion.fecha_simulacion
+        fechaSimulacion: simulacion.fecha_simulacion,
+        casosSimilares: casosSimilares
       };
       
       setSimulationResult(simulationResultFormat);
@@ -108,7 +111,7 @@ export const SimulacionesPage = () => {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-primary-900">Simulaciones</h1>
+          <h1 className="text-3xl font-bold text-primary-90">Simulaciones</h1>
         </div>
 
         {/* Tabs */}
@@ -155,7 +158,7 @@ export const SimulacionesPage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <SimulationFormComplete onSimulationComplete={handleSimulationComplete} />
+                <SimulationWizardForm onSimulationComplete={handleSimulationComplete} />
               </CardContent>
             </Card>
 
@@ -260,6 +263,13 @@ export const SimulacionesPage = () => {
                         </div>
                       )}
                     </div>
+                  </div>
+                )}
+                
+                {/* Similar Cases Section */}
+                {simulationResult.casosSimilares && (
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <SimilarCasesList casos={simulationResult.casosSimilares} />
                   </div>
                 )}
               </div>

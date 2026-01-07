@@ -1,6 +1,11 @@
 import axios from "axios";
+import { toast } from "sonner";
+// . env reavt|typescript
 
-const API_URL = "http://localhost:3000";
+
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+console.log("API_URL: ", API_URL);
 
 export const api = axios.create({
   baseURL: API_URL,
@@ -28,13 +33,19 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Alert user about session expiration
-      alert("Su sesión ha expirado. Por favor inicie sesión nuevamente.");
+      // Show toast notification for session expiration
+      toast.error("Su sesión ha expirado. Por favor inicie sesión nuevamente.", {
+        duration: 4000,
+      });
 
       // Clear token and redirect to login
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");
-      window.location.href = "/login";
+      
+      // Small delay to allow user to see the toast
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 500);
     }
     return Promise.reject(error);
   }
@@ -119,6 +130,23 @@ export const procesoJudicialAPI = {
     );
     return response.data;
   },
+  getCasosSimilaresBySimulacion: async (simulacionId: string) => {
+    const response = await api.get(
+      `/proceso-judicial/simulacion/${simulacionId}/casos-similares`
+    );
+    return response.data;
+  },
+  getReglas: async () => {
+    const response = await api.get("/proceso-judicial/reglas");
+    return response.data;
+  },
+  shareCase: async (id: string, recipientEmail: string, message?: string) => {
+    const response = await api.post(`/proceso-judicial/${id}/share`, {
+      recipientEmail,
+      message,
+    });
+    return response.data;
+  },
 };
 
 // Person API
@@ -141,6 +169,18 @@ export const personAPI = {
   },
   delete: async (id: string) => {
     const response = await api.delete(`/person/${id}`);
+    return response.data;
+  },
+};
+
+// User API
+export const userAPI = {
+  getConfig: async (id: number) => {
+    const response = await api.get(`/user/${id}/config`);
+    return response.data;
+  },
+  updateConfig: async (id: number, data: any) => {
+    const response = await api.patch(`/user/${id}/config`, data);
     return response.data;
   },
 };

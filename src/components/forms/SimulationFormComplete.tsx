@@ -88,27 +88,51 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
         presencia_escolar: data.presencia_escolar,
         ambos_padres_tienen_condiciones_adecuadas: data.ambos_padres_tienen_condiciones_adecuadas === 'true',
         
-        // Progenitores
-        idoneidad_moral: data.idoneidad_moral,
-        estado_emocional_de_los_padres: data.estado_emocional_de_los_padres,
+        // Progenitores - MADRE
+        nombre_madre: data.nombre_madre || undefined,
+        idoneidad_moral_madre: data.idoneidad_moral_madre,
+        estado_emocional_madre: data.estado_emocional_madre,
         madre_demuestra_estabilidad_emocional: data.madre_demuestra_estabilidad_emocional === 'true',
-        existen_antecedentes_de_violencia: data.existen_antecedentes_de_violencia === 'true',
-        evidencia_de_negligencia_severa: data.evidencia_de_negligencia_severa === 'true',
-        progenitor_conducta_agresiva_anterior: data.progenitor_conducta_agresiva_anterior === 'true',
-        existen_reportes_psicosociales_negativos: data.existen_reportes_psicosociales_negativos === 'true',
+        madre_tiene_antecedentes_de_violencia: data.madre_tiene_antecedentes_de_violencia === 'true',
+        madre_evidencia_negligencia_severa: data.madre_evidencia_negligencia_severa === 'true',
+        madre_conducta_agresiva_anterior: data.madre_conducta_agresiva_anterior === 'true',
+        madre_reportes_psicosociales_negativos: data.madre_reportes_psicosociales_negativos === 'true',
+
+        // Progenitores - PADRE
+        nombre_padre: data.nombre_padre || undefined,
+        idoneidad_moral_padre: data.idoneidad_moral_padre,
+        estado_emocional_padre: data.estado_emocional_padre,
+        padre_demuestra_estabilidad_emocional: data.padre_demuestra_estabilidad_emocional === 'true',
+        padre_tiene_antecedentes_de_violencia: data.padre_tiene_antecedentes_de_violencia === 'true',
+        padre_evidencia_negligencia_severa: data.padre_evidencia_negligencia_severa === 'true',
+        padre_conducta_agresiva_anterior: data.padre_conducta_agresiva_anterior === 'true',
+        padre_reportes_psicosociales_negativos: data.padre_reportes_psicosociales_negativos === 'true',
         
-        // Tiempo y Salud
-        disponibilidad_de_tiempo: data.disponibilidad_de_tiempo,
-        estado_de_salud_fisica_o_condiciones_medicas_del_progenitor: data.estado_de_salud_fisica_o_condiciones_medicas_del_progenitor,
-        manejo_de_necesidades_especiales: data.manejo_de_necesidades_especiales === 'true',
+        // Tiempo y Salud - MADRE
+        disponibilidad_de_tiempo_madre: data.disponibilidad_de_tiempo_madre,
+        estado_de_salud_madre: data.estado_de_salud_madre,
+        madre_maneja_necesidades_especiales: data.madre_maneja_necesidades_especiales === 'true',
+
+        // Tiempo y Salud - PADRE
+        disponibilidad_de_tiempo_padre: data.disponibilidad_de_tiempo_padre,
+        estado_de_salud_padre: data.estado_de_salud_padre,
+        padre_maneja_necesidades_especiales: data.padre_maneja_necesidades_especiales === 'true',
         
-        // Financieros
-        nivel_de_ingresos: Number(data.nivel_de_ingresos),
-        estabilidad_laboral_del_progenitor: data.estabilidad_laboral_del_progenitor,
-        padre_madre_tiene_ingresos_comprobados: data.padre_madre_tiene_ingresos_comprobados === 'true',
-        progenitor_obligado_no_tiene_ingresos_formales: data.progenitor_obligado_no_tiene_ingresos_formales === 'true',
-        obligado_demuestra_cargas_familiares_adicionales: data.obligado_demuestra_cargas_familiares_adicionales === 'true',
-        obligado_incumple_reiteradamente_pension: data.obligado_incumple_reiteradamente_pension === 'true',
+        // Financieros - MADRE
+        nivel_de_ingresos_madre: Number(data.nivel_de_ingresos_madre),
+        estabilidad_laboral_madre: data.estabilidad_laboral_madre,
+        madre_tiene_ingresos_comprobados: data.madre_tiene_ingresos_comprobados === 'true',
+        madre_sin_ingresos_formales: data.madre_sin_ingresos_formales === 'true',
+        madre_cargas_familiares_adicionales: data.madre_cargas_familiares_adicionales === 'true',
+        madre_incumple_pension: data.madre_incumple_pension === 'true',
+
+        // Financieros - PADRE
+        nivel_de_ingresos_padre: Number(data.nivel_de_ingresos_padre),
+        estabilidad_laboral_padre: data.estabilidad_laboral_padre,
+        padre_tiene_ingresos_comprobados: data.padre_tiene_ingresos_comprobados === 'true',
+        padre_sin_ingresos_formales: data.padre_sin_ingresos_formales === 'true',
+        padre_cargas_familiares_adicionales: data.padre_cargas_familiares_adicionales === 'true',
+        padre_incumple_pension: data.padre_incumple_pension === 'true',
         cumplimiento_de_las_obligaciones_previas: data.cumplimiento_de_las_obligaciones_previas,
         
         // Procesales
@@ -266,13 +290,13 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
     <button
       type="button"
       onClick={() => toggleSection(section)}
-      className="w-full flex items-center justify-between p-4 bg-primary-50 hover:bg-primary-100 transition-colors border-b border-primary-200"
+      className="w-full flex items-center justify-between p-4 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors border-b border-primary-200 dark:border-primary-800"
     >
-      <h3 className="text-lg font-semibold text-primary-900">{title}</h3>
+      <h3 className="text-lg font-semibold text-primary-900 dark:text-primary-100">{title}</h3>
       {sectionsOpen[section] ? (
-        <ChevronUp className="w-5 h-5 text-primary-600" />
+        <ChevronUp className="w-5 h-5 text-primary-600 dark:text-primary-400" />
       ) : (
-        <ChevronDown className="w-5 h-5 text-primary-600" />
+        <ChevronDown className="w-5 h-5 text-primary-600 dark:text-primary-400" />
       )}
     </button>
   );
@@ -288,14 +312,14 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
       )}
 
       {/* Case Selector */}
-      <div className="space-y-2 p-4 border rounded-lg bg-white">
-        <label className="text-sm font-medium text-gray-700">
+      <div className="space-y-2 p-4 border rounded-lg bg-white dark:bg-slate-900 dark:border-slate-800">
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Seleccionar Caso <span className="text-red-500">*</span>
         </label>
         <div className="relative">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
+            <Input className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 pl-10"
               placeholder="Buscar por número de caso o nombre del NNA..."
               value={casoSearchTerm}
               onChange={(e) => {
@@ -307,25 +331,24 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
                 }
               }}
               onFocus={() => setIsCasoListOpen(true)}
-              className="pl-10"
             />
           </div>
           
           {isCasoListOpen && casoSearchTerm && (
-            <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+            <div className="absolute z-10 w-full mt-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-md shadow-lg max-h-60 overflow-auto">
               {filteredCasos.length > 0 ? (
                 filteredCasos.map((caso) => (
                   <div
                     key={caso.id}
-                    className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                     onClick={() => handleCasoSelect(caso)}
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
                           {caso.id_caso_dinamico || 'Sin número'}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           NNA: {caso.nna?.nombre_completo || 'No disponible'}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
@@ -336,7 +359,7 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
                   No se encontraron casos
                 </div>
               )}
@@ -345,12 +368,12 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
         </div>
 
         {selectedCaso && (
-          <Card className="bg-green-50 border-green-200">
+          <Card className="bg-gree-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
             <CardContent className="p-4">
-              <p className="text-sm text-green-800">
+              <p className="text-sm text-green-800 dark:text-green-300">
                 <span className="font-medium">Caso seleccionado:</span> {selectedCaso.id_caso_dinamico}
               </p>
-              <p className="text-sm text-green-700 mt-1">
+              <p className="text-sm text-green-700 dark:text-green-400 mt-1">
                 NNA: {selectedCaso.nna?.nombre_completo} • Tipo: {selectedCaso.tipo_demanda}
               </p>
             </CardContent>
@@ -360,24 +383,24 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
 
       {/* Only show form sections when a case is selected */}
       {selectedCaso && (
-        <div className="space-y-2 border rounded-lg overflow-hidden">
+        <div className="space-y-2 border rounded-lg overflow-hidden dark:border-slate-800">
           {/* SECCIÓN: Datos Básicos */}
           <div>
             <SectionHeader title="I. Datos Básicos (Opcional)" section="basicos" />
             {sectionsOpen.basicos && (
-              <div className="p-4 space-y-4 bg-white">
+              <div className="p-4 space-y-4 bg-white dark:bg-slate-900">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Monto Solicitado (DOP)</label>
-                    <Input type="number" placeholder="15000" {...register('montoSolicitado')} min="0" step="100" />
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Monto Solicitado (DOP)</label>
+                    <Input type="number" placeholder="15000" {...register('montoSolicitado')} min="0" step="100" className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Recursos Demandado Estimados (DOP)</label>
-                    <Input type="number" placeholder="80000" {...register('recursosDemandadoEstimados')} min="0" step="1000" />
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Recursos Demandado Estimados (DOP)</label>
+                    <Input className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" type="number" placeholder="80000" {...register('recursosDemandadoEstimados')} min="0" step="1000" />
                   </div>
                   <div className="md:col-span-1">
-                    <label className="text-sm font-medium text-gray-700">Notas Adicionales</label>
-                    <Input placeholder="Información adicional..." {...register('notasAdicionales')} />
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Notas Adicionales</label>
+                    <Input className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" placeholder="Información adicional..." {...register('notasAdicionales')} />
                   </div>
                 </div>
               </div>
@@ -388,15 +411,15 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
           <div>
             <SectionHeader title="II. Atributos del Menor" section="menor" />
             {sectionsOpen.menor && (
-              <div className="p-4 space-y-4 bg-white">
+              <div className="p-4 space-y-4 bg-white dark:bg-slate-900">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Edad del Menor <span className="text-red-500">*</span></label>
-                    <Input type="number" {...register('edad_del_menor', { required: true })} min="0" max="18" defaultValue="8" />
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Edad del Menor <span className="text-red-500">*</span></label>
+                    <Input type="number" {...register('edad_del_menor', { required: true })} min="0" max="18" defaultValue="8" className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Preferencia del Menor <span className="text-red-500">*</span></label>
-                    <select {...register('preferencia_del_menor', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Preferencia del Menor <span className="text-red-500">*</span></label>
+                    <select {...register('preferencia_del_menor', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
                       <option value="MADRE">MADRE</option>
                       <option value="PADRE">PADRE</option>
                       <option value="AMBOS">AMBOS</option>
@@ -404,22 +427,22 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Expresa Preferencia Válida <span className="text-red-500">*</span></label>
-                    <select {...register('expresa_preferencia_valida', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Expresa Preferencia Válida <span className="text-red-500">*</span></label>
+                    <select {...register('expresa_preferencia_valida', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Tiene Madurez Suficiente <span className="text-red-500">*</span></label>
-                    <select {...register('tiene_madurez_suficiente', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Tiene Madurez Suficiente <span className="text-red-500">*</span></label>
+                    <select {...register('tiene_madurez_suficiente', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Menor Tiene Necesidades Especiales <span className="text-red-500">*</span></label>
-                    <select {...register('menor_tiene_necesidades_especiales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Menor Tiene Necesidades Especiales <span className="text-red-500">*</span></label>
+                    <select {...register('menor_tiene_necesidades_especiales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="false">No</option>
                       <option value="true">Sí</option>
                     </select>
@@ -433,11 +456,11 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
           <div>
             <SectionHeader title="III. Guarda y Ambiente" section="ambiente" />
             {sectionsOpen.ambiente && (
-              <div className="p-4 space-y-4 bg-white">
+              <div className="p-4 space-y-4 bg-white dark:bg-slate-900">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Custodia Previa <span className="text-red-500">*</span></label>
-                    <select {...register('custodia_previa', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Custodia Previa <span className="text-red-500">*</span></label>
+                    <select {...register('custodia_previa', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100">
                       <option value="MADRE">MADRE</option>
                       <option value="PADRE">PADRE</option>
                       <option value="COMPARTIDA">COMPARTIDA</option>
@@ -445,26 +468,26 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Condiciones de la Vivienda <span className="text-red-500">*</span></label>
-                    <select {...register('condiciones_de_la_vivienda', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Condiciones de la Vivienda <span className="text-red-500">*</span></label>
+                    <select {...register('condiciones_de_la_vivienda', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="ADECUADAS">ADECUADAS</option>
                       <option value="INADECUADAS">INADECUADAS</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Distancia Entre Domicilios (km) <span className="text-red-500">*</span></label>
-                    <Input type="number" {...register('distancia_entre_domicilios', { required: true })} min="0" step="0.1" defaultValue="5" />
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Distancia Entre Domicilios (km) <span className="text-red-500">*</span></label>
+                    <Input type="number" {...register('distancia_entre_domicilios', { required: true })} min="0" step="0.1" defaultValue="5" className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Presencia Escolar <span className="text-red-500">*</span></label>
-                    <select {...register('presencia_escolar', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Presencia Escolar <span className="text-red-500">*</span></label>
+                    <select {...register('presencia_escolar', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="REGULAR">REGULAR</option>
                       <option value="IRREGULAR">IRREGULAR</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Ambos Padres Tienen Condiciones Adecuadas <span className="text-red-500">*</span></label>
-                    <select {...register('ambos_padres_tienen_condiciones_adecuadas', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Ambos Padres Tienen Condiciones Adecuadas <span className="text-red-500">*</span></label>
+                    <select {...register('ambos_padres_tienen_condiciones_adecuadas', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
@@ -477,59 +500,129 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
           {/* SECCIÓN: Progenitores */}
           <div>
             <SectionHeader title="IV. Atributos de Progenitores" section="progenitores" />
-            {sectionsOpen.progenitores && (
-              <div className="p-4 space-y-4 bg-white">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Idoneidad Moral <span className="text-red-500">*</span></label>
-                    <select {...register('idoneidad_moral', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="BUENA">BUENA</option>
-                      <option value="MEDIA">MEDIA</option>
-                      <option value="MALA">MALA</option>
-                    </select>
+             {sectionsOpen.progenitores && (
+              <div className="p-4 space-y-6 bg-white dark:bg-slate-900">
+                {/* IV.A. Datos de la Madre */}
+                <div className="border-l-4 border-pink-400 pl-4">
+                  <h4 className="text-md font-semibold text-pink-700 dark:text-pink-400 mb-4">IV.A. Datos de la Madre</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre Completo de la Madre</label>
+                      <Input type="text" placeholder="Ej: María González" {...register('nombre_madre')} className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Idoneidad Moral (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('idoneidad_moral_madre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="BUENA">BUENA</option>
+                        <option value="MEDIA">MEDIA</option>
+                        <option value="MALA">MALA</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Estado Emocional (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('estado_emocional_madre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="ESTABLE">ESTABLE</option>
+                        <option value="INESTABLE">INESTABLE</option>
+                        <option value="BAJO_TRATAMIENTO">BAJO TRATAMIENTO</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Demuestra Estabilidad Emocional (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('madre_demuestra_estabilidad_emocional', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Antecedentes de Violencia (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('madre_tiene_antecedentes_de_violencia', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidencia de Negligencia Severa (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('madre_evidencia_negligencia_severa', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Conducta Agresiva Anterior (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('madre_conducta_agresiva_anterior', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Reportes Psicosociales Negativos (Madre) <span className="text-red-500">*</span></label>
+                      <select {...register('madre_reportes_psicosociales_negativos', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Estado Emocional de los Padres <span className="text-red-500">*</span></label>
-                    <select {...register('estado_emocional_de_los_padres', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="ESTABLE">ESTABLE</option>
-                      <option value="INESTABLE">INESTABLE</option>
-                      <option value="BAJO_TRATAMIENTO">BAJO TRATAMIENTO</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Madre Demuestra Estabilidad Emocional <span className="text-red-500">*</span></label>
-                    <select {...register('madre_demuestra_estabilidad_emocional', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="true">Sí</option>
-                      <option value="false">No</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Existen Antecedentes de Violencia <span className="text-red-500">*</span></label>
-                    <select {...register('existen_antecedentes_de_violencia', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="false">No</option>
-                      <option value="true">Sí</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Evidencia de Negligencia Severa <span className="text-red-500">*</span></label>
-                    <select {...register('evidencia_de_negligencia_severa', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="false">No</option>
-                      <option value="true">Sí</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Progenitor Conducta Agresiva Anterior <span className="text-red-500">*</span></label>
-                    <select {...register('progenitor_conducta_agresiva_anterior', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="false">No</option>
-                      <option value="true">Sí</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Existen Reportes Psicosociales Negativos <span className="text-red-500">*</span></label>
-                    <select {...register('existen_reportes_psicosociales_negativos', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="false">No</option>
-                      <option value="true">Sí</option>
-                    </select>
+                </div>
+
+                {/* IV.B. Datos del Padre */}
+                <div className="border-l-4 border-blue-400 pl-4">
+                  <h4 className="text-md font-semibold text-blue-700 dark:text-blue-400 mb-4">IV.B. Datos del Padre</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nombre Completo del Padre</label>
+                      <Input type="text" placeholder="Ej: Juan Pérez" {...register('nombre_padre')} className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Idoneidad Moral (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('idoneidad_moral_padre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="BUENA">BUENA</option>
+                        <option value="MEDIA">MEDIA</option>
+                        <option value="MALA">MALA</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Estado Emocional (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('estado_emocional_padre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="ESTABLE">ESTABLE</option>
+                        <option value="INESTABLE">INESTABLE</option>
+                        <option value="BAJO_TRATAMIENTO">BAJO TRATAMIENTO</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Demuestra Estabilidad Emocional (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('padre_demuestra_estabilidad_emocional', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Antecedentes de Violencia (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('padre_tiene_antecedentes_de_violencia', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidencia de Negligencia Severa (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('padre_evidencia_negligencia_severa', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Conducta Agresiva Anterior (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('padre_conducta_agresiva_anterior', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Reportes Psicosociales Negativos (Padre) <span className="text-red-500">*</span></label>
+                      <select {...register('padre_reportes_psicosociales_negativos', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                        <option value="false">No</option>
+                        <option value="true">Sí</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -540,29 +633,64 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
           <div>
             <SectionHeader title="V. Tiempo y Salud" section="salud" />
             {sectionsOpen.salud && (
-              <div className="p-4 space-y-4 bg-white">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Disponibilidad de Tiempo <span className="text-red-500">*</span></label>
-                    <select {...register('disponibilidad_de_tiempo', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="ALTA">ALTA</option>
-                      <option value="MEDIA">MEDIA</option>
-                      <option value="BAJA">BAJA</option>
-                    </select>
+              <div className="p-4 space-y-4 bg-white dark:bg-slate-900">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* V.A. Madre */}
+                  <div className="border-l-4 border-pink-400 pl-4">
+                    <h4 className="text-md font-semibold text-pink-700 mb-4">Madre</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Disponibilidad de Tiempo (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('disponibilidad_de_tiempo_madre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="ALTA">ALTA</option>
+                          <option value="MEDIA">MEDIA</option>
+                          <option value="BAJA">BAJA</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Estado de Salud Física (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('estado_de_salud_madre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="SANO">SANO</option>
+                          <option value="CON_CONDICION">CON CONDICIÓN</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Maneja Necesidades Especiales (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('madre_maneja_necesidades_especiales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Estado de Salud Física del Progenitor <span className="text-red-500">*</span></label>
-                    <select {...register('estado_de_salud_fisica_o_condiciones_medicas_del_progenitor', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="SANO">SANO</option>
-                      <option value="CON_CONDICION">CON CONDICIÓN</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Manejo de Necesidades Especiales <span className="text-red-500">*</span></label>
-                    <select {...register('manejo_de_necesidades_especiales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="true">Sí</option>
-                      <option value="false">No</option>
-                    </select>
+
+                  {/* V.B. Padre */}
+                  <div className="border-l-4 border-blue-400 pl-4">
+                    <h4 className="text-md font-semibold text-blue-700 mb-4">Padre</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Disponibilidad de Tiempo (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('disponibilidad_de_tiempo_padre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="ALTA">ALTA</option>
+                          <option value="MEDIA">MEDIA</option>
+                          <option value="BAJA">BAJA</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Estado de Salud Física (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('estado_de_salud_padre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="SANO">SANO</option>
+                          <option value="CON_CONDICION">CON CONDICIÓN</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Maneja Necesidades Especiales (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('padre_maneja_necesidades_especiales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -573,56 +701,111 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
           <div>
             <SectionHeader title="VI. Atributos Financieros y Cumplimiento" section="financieros" />
             {sectionsOpen.financieros && (
-              <div className="p-4 space-y-4 bg-white">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Nivel de Ingresos (DOP/mes) <span className="text-red-500">*</span></label>
-                    <Input type="number" {...register('nivel_de_ingresos', { required: true })} min="0" step="100" defaultValue="50000" />
+              <div className="p-4 space-y-4 bg-white dark:bg-slate-900">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* VI.A. Madre */}
+                  <div className="border-l-4 border-pink-400 pl-4">
+                    <h4 className="text-md font-semibold text-pink-700 dark:text-pink-400 mb-4">Madre</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nivel de Ingresos (DOP/mes) (Madre) <span className="text-red-500">*</span></label>
+                        <Input type="number" {...register('nivel_de_ingresos_madre', { required: true })} min="0" step="100" defaultValue="50000" className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Estabilidad Laboral (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('estabilidad_laboral_madre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="ESTABLE">ESTABLE</option>
+                          <option value="INDEPENDIENTE">INDEPENDIENTE</option>
+                          <option value="DESEMPLEADO">DESEMPLEADO</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Tiene Ingresos Comprobados (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('madre_tiene_ingresos_comprobados', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Sin Ingresos Formales (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('madre_sin_ingresos_formales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="false">No</option>
+                          <option value="true">Sí</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Cargas Familiares Adicionales (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('madre_cargas_familiares_adicionales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Incumple Pensión (Madre) <span className="text-red-500">*</span></label>
+                        <select {...register('madre_incumple_pension', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="false">No</option>
+                          <option value="true">Sí</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Estabilidad Laboral del Progenitor <span className="text-red-500">*</span></label>
-                    <select {...register('estabilidad_laboral_del_progenitor', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="ESTABLE">ESTABLE</option>
-                      <option value="INDEPENDIENTE">INDEPENDIENTE</option>
-                      <option value="DESEMPLEADO">DESEMPLEADO</option>
-                    </select>
+
+                  {/* VI.B. Padre */}
+                  <div className="border-l-4 border-blue-400 pl-4">
+                    <h4 className="text-md font-semibold text-blue-700 dark:text-blue-400 mb-4">Padre</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nivel de Ingresos (DOP/mes) (Padre) <span className="text-red-500">*</span></label>
+                        <Input type="number" {...register('nivel_de_ingresos_padre', { required: true })} min="0" step="100" defaultValue="50000" className="dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Estabilidad Laboral (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('estabilidad_laboral_padre', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="ESTABLE">ESTABLE</option>
+                          <option value="INDEPENDIENTE">INDEPENDIENTE</option>
+                          <option value="DESEMPLEADO">DESEMPLEADO</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Tiene Ingresos Comprobados (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('padre_tiene_ingresos_comprobados', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Sin Ingresos Formales (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('padre_sin_ingresos_formales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="false">No</option>
+                          <option value="true">Sí</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Cargas Familiares Adicionales (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('padre_cargas_familiares_adicionales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="true">Sí</option>
+                          <option value="false">No</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Incumple Pensión (Padre) <span className="text-red-500">*</span></label>
+                        <select {...register('padre_incumple_pension', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                          <option value="false">No</option>
+                          <option value="true">Sí</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Padre/Madre Tiene Ingresos Comprobados <span className="text-red-500">*</span></label>
-                    <select {...register('padre_madre_tiene_ingresos_comprobados', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="true">Sí</option>
-                      <option value="false">No</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Progenitor No Tiene Ingresos Formales <span className="text-red-500">*</span></label>
-                    <select {...register('progenitor_obligado_no_tiene_ingresos_formales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="false">No</option>
-                      <option value="true">Sí</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Obligado Demuestra Cargas Familiares Adicionales <span className="text-red-500">*</span></label>
-                    <select {...register('obligado_demuestra_cargas_familiares_adicionales', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="true">Sí</option>
-                      <option value="false">No</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Obligado Incumple Reiteradamente Pensión <span className="text-red-500">*</span></label>
-                    <select {...register('obligado_incumple_reiteradamente_pension', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="false">No</option>
-                      <option value="true">Sí</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">Cumplimiento de Obligaciones Previas <span className="text-red-500">*</span></label>
-                    <select {...register('cumplimiento_de_las_obligaciones_previas', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option value="BUENO">BUENO</option>
-                      <option value="REGULAR">REGULAR</option>
-                      <option value="MALO">MALO</option>
-                    </select>
-                  </div>
+                </div>
+
+                {/* Cumplimiento de Obligaciones Previas (General) */}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Cumplimiento de Obligaciones Previas <span className="text-red-500">*</span></label>
+                  <select {...register('cumplimiento_de_las_obligaciones_previas', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
+                    <option value="BUENO">BUENO</option>
+                    <option value="REGULAR">REGULAR</option>
+                    <option value="MALO">MALO</option>
+                  </select>
                 </div>
               </div>
             )}
@@ -632,60 +815,60 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
           <div>
             <SectionHeader title="VII. Atributos Procesales" section="procesales" />
             {sectionsOpen.procesales && (
-              <div className="p-4 space-y-4 bg-white">
+              <div className="p-4 space-y-4 bg-white dark:bg-slate-900">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Documentos Presentados Válidos <span className="text-red-500">*</span></label>
-                    <select {...register('documentos_presentados_validos', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Documentos Presentados Válidos <span className="text-red-500">*</span></label>
+                    <select {...register('documentos_presentados_validos', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Notificación Correcta/Verdadera <span className="text-red-500">*</span></label>
-                    <select {...register('notificacion_correcta_verdadera', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Notificación Correcta/Verdadera <span className="text-red-500">*</span></label>
+                    <select {...register('notificacion_correcta_verdadera', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Parte No Comparece Sin Justificación <span className="text-red-500">*</span></label>
-                    <select {...register('parte_no_comparece_sin_justificacion', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Parte No Comparece Sin Justificación <span className="text-red-500">*</span></label>
+                    <select {...register('parte_no_comparece_sin_justificacion', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="false">No</option>
                       <option value="true">Sí</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Testigo Relevante Válido <span className="text-red-500">*</span></label>
-                    <select {...register('testigo_relevante_valido', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Testigo Relevante Válido <span className="text-red-500">*</span></label>
+                    <select {...register('testigo_relevante_valido', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Prueba Psicosocial Disponible <span className="text-red-500">*</span></label>
-                    <select {...register('prueba_psicosocial_disponible', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Prueba Psicosocial Disponible <span className="text-red-500">*</span></label>
+                    <select {...register('prueba_psicosocial_disponible', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Hay Conciliación Entre las Partes <span className="text-red-500">*</span></label>
-                    <select {...register('hay_conciliacion_entre_las_partes', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Hay Conciliación Entre las Partes <span className="text-red-500">*</span></label>
+                    <select {...register('hay_conciliacion_entre_las_partes', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="true">Sí</option>
                       <option value="false">No</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Evidencia Contradice Testimonio <span className="text-red-500">*</span></label>
-                    <select {...register('evidencia_contradice_testimonio', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Evidencia Contradice Testimonio <span className="text-red-500">*</span></label>
+                    <select {...register('evidencia_contradice_testimonio', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="false">No</option>
                       <option value="true">Sí</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-700">Pruebas Son Insuficientes <span className="text-red-500">*</span></label>
-                    <select {...register('pruebas_son_insuficientes', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Pruebas Son Insuficientes <span className="text-red-500">*</span></label>
+                    <select {...register('pruebas_son_insuficientes', { required: true })} className="flex h-10 w-full rounded-md border border-input bg-background dark:bg-slate-800 dark:border-slate-700 dark:text-gray-100 px-3 py-2 text-sm">
                       <option value="false">No</option>
                       <option value="true">Sí</option>
                     </select>
@@ -716,7 +899,7 @@ export const SimulationFormComplete: React.FC<SimulationFormCompleteProps> = ({
       )}
       {/* Processing Overlay Animation */}
       {isProcessing && (
-        <div className="fixed inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-6 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-white dark:bg-slate-900/90 z-50 flex flex-col items-center justify-center p-6 backdrop-blur-sm">
           <div className="w-full max-w-md space-y-8">
             <div className="flex flex-col items-center">
               <div className="relative w-24 h-24 mb-6">

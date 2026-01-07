@@ -8,6 +8,8 @@ import { Loader2, Search, AlertCircle } from 'lucide-react';
 
 interface SimulationFormData {
   casoId: string;
+  nombre_madre?: string;
+  nombre_padre?: string;
   montoSolicitado?: string;
   notasAdicionales?: string;
   recursosDemandadoEstimados?: string;
@@ -55,6 +57,8 @@ export const SimulationForm: React.FC<SimulationFormProps> = ({
       }
 
       const simulationData = {
+        nombre_madre: data.nombre_madre || undefined,
+        nombre_padre: data.nombre_padre || undefined,
         montoSolicitado: data.montoSolicitado ? Number(data.montoSolicitado) : undefined,
         notasAdicionales: data.notasAdicionales || undefined,
         recursosDemandadoEstimados: data.recursosDemandadoEstimados ? Number(data.recursosDemandadoEstimados) : undefined,
@@ -191,6 +195,37 @@ export const SimulationForm: React.FC<SimulationFormProps> = ({
           <h3 className="text-md font-semibold text-primary-900">
             Datos Adicionales para la Simulación (Opcional)
           </h3>
+
+          {/* Parent Names Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Nombre de la Madre
+              </label>
+              <Input
+                type="text"
+                placeholder="Ej: María González"
+                {...register('nombre_madre')}
+              />
+              <p className="text-xs text-gray-500">
+                Opcional: Nombre completo de la madre
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Nombre del Padre
+              </label>
+              <Input
+                type="text"
+                placeholder="Ej: Juan Pérez"
+                {...register('nombre_padre')}
+              />
+              <p className="text-xs text-gray-500">
+                Opcional: Nombre completo del padre
+              </p>
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Monto Solicitado */}

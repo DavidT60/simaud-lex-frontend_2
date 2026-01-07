@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { CaseDetailsModal } from "@/components/modals/CaseDetailsModal";
 import { procesoJudicialAPI } from "@/lib/api";
 
 export const CasosPage = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [casos, setCasos] = useState<any[]>([]);
@@ -177,7 +179,7 @@ export const CasosPage = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={() => window.open(`/casos/${caso.id}`, '_blank')}
+                              onClick={() => navigate(`/casos/${caso.id}`)}
                             >
                               Ver Caso Completo
                             </Button>

@@ -14,6 +14,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
+  handleSessionExpired: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -77,6 +78,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const handleSessionExpired = () => {
+    // Clear user state and localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
+    setUser(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -86,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
+        handleSessionExpired,
       }}
     >
       {children}

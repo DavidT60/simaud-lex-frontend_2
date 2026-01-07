@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth.context';
 import { useTheme } from '@/contexts/theme.context';
 import { Button } from '@/components/ui/button';
@@ -76,6 +77,17 @@ export const Header = () => {
                       }`}
                     />
                   </button>
+                </div>
+
+                <div className="pt-2 border-t border-primary-100 dark:border-gray-700">
+                  <Link 
+                    to="/configuracion-usuario" 
+                    className="flex items-center gap-2 w-full p-2 text-sm text-primary-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-700 rounded-md transition-colors"
+                    onClick={() => setShowSettings(false)}
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Gestionar Cuenta</span>
+                  </Link>
                 </div>
 
                 <div className="pt-2 border-t border-primary-100 dark:border-gray-700">

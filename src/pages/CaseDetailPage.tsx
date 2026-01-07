@@ -3,15 +3,21 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Gavel } from "lucide-react";
+import { ArrowLeft, Gavel, Share2, User } from "lucide-react";
 import { procesoJudicialAPI } from "@/lib/api";
 import ReactMarkdown from 'react-markdown';
+import { ShareCaseModal } from "@/components/modals/ShareCaseModal";
+import { HechosSimulacionReadOnly } from "@/components/HechosSimulacionReadOnly";
+import { SimilarCasesList } from "@/components/simulation/SimilarCasesList";
 
 export const CaseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [caseData, setCaseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [simulationData, setSimulationData] = useState<any>(null);
+  const [loadingSimulation, setLoadingSimulation] = useState(false);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -30,6 +36,42 @@ export const CaseDetailPage = () => {
 
     fetchDetails();
   }, [id]);
+
+  // Fetch simulation data if case has a sentence
+  useEffect(() => {
+    const fetchSimulationData = async () => {
+      if (caseData?.sentencia && id) {
+        setLoadingSimulation(true);
+        try {
+          const historial = await procesoJudicialAPI.getHistorialSimulaciones(id);
+          if (historial && historial.length > 0) {
+            // Get the most recent simulation
+            setSimulationData(historial[0]);
+          }
+        } catch (error) {
+          console.error("Error fetching simulation data:", error);
+        } finally {
+          setLoadingSimulation(false);
+        }
+      }
+    };
+    fetchSimulationData();
+  }, [caseData, id]);
+
+  // Transformar datos del backend al formato del componente
+  const similarCasesMapped = simulationData?.casosSimilares?.map((s: any) => ({
+    casoId: s.casoSimilar?.id,
+    procesoId: s.casoSimilar?.proceso?.id,
+    numeroCaso: s.casoSimilar?.proceso?.id_caso_dinamico || 'N/A',
+    tipoDemanda: s.casoSimilar?.proceso?.tipo_demanda || 'N/A',
+    scoreSimulitud: s.scoreSimulitud,
+    puntuacionMadre: s.puntuacionMadreSimilar,
+    puntuacionPadre: s.puntuacionPadreSimilar,
+    recomendacion: s.recomendacionSimilar,
+    fechaSimulacion: s.fechaComparacion, // Ojo: usar fechaComparacion o fecha_simulacion del similar? Usaremos lo disponible
+    camposCoincidentes: s.camposCoincidentes,
+  })) || [];
+
 
   const getEstadoBadge = (estado: string) => {
     const colors = {
@@ -207,15 +249,42 @@ export const CaseDetailPage = () => {
 
 
             {caseData.sentencia ? (
-              <Card className="border-2 border-primary-200 bg-slate-50">
+              <Card className="border-2 border-primary-200 bg-slate-50 dark:bg-slate-800 dark:border-primary-700">
                 <CardHeader>
-                  <h2 className="text-xl font-semibold text-primary-900 flex items-center gap-2">
-                    <Gavel className="w-6 h-6" />
-                    Fallo de Sentencia (Generado por IA)
-                  </h2>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-primary-900 dark:text-white flex items-center gap-2">
+                      <Gavel className="w-6 h-6" />
+                      Fallo de Sentencia (Generado por IA)
+                    </h2>
+                    <Button
+                      onClick={() => setShareModalOpen(true)}
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Compartir Caso
+                    </Button>
+                  </div>
+                  {/* Creator Info */}
+                  {(caseData.sentencia.created_by_name || caseData.sentencia.created_by_email) && (
+                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                        <User className="w-4 h-4" />
+                        <span>
+                          Creado por: <span className="font-medium text-gray-900 dark:text-gray-200">
+                            {caseData.sentencia.created_by_name || 'Sistema'}
+                          </span>
+                          {caseData.sentencia.created_by_email && (
+                            <span className="ml-2">({caseData.sentencia.created_by_email})</span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed font-serif p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="prose prose-sm max-w-none text-slate-700 dark:text-slate-300 leading-relaxed font-serif p-4 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-gray-700">
                     <ReactMarkdown>{caseData.sentencia.fallo}</ReactMarkdown>
                   </div>
                 </CardContent>
@@ -233,6 +302,34 @@ export const CaseDetailPage = () => {
                  </CardContent>
               </Card>
             ) : null}
+
+            {/* Simulation Data Section */}
+            {simulationData && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-xl font-semibold text-primary-900 dark:text-white">
+                    Datos de la Simulación
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Información detallada utilizada para generar la sentencia
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  {loadingSimulation ? (
+                    <div className="text-center text-gray-500 py-4">
+                      Cargando datos de simulación...
+                    </div>
+                  ) : (
+                    <>
+                      <HechosSimulacionReadOnly data={simulationData} />
+                      <div className="mt-8 border-t pt-8">
+                         <SimilarCasesList casos={similarCasesMapped} />
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+            )}
             
             {/* Parties Involved */}
             {caseData.partes && caseData.partes.length > 0 && (
@@ -272,6 +369,16 @@ export const CaseDetailPage = () => {
           </Card>
         )}
       </div>
+
+      {/* Share Case Modal */}
+      {id && (
+        <ShareCaseModal
+          isOpen={shareModalOpen}
+          onClose={() => setShareModalOpen(false)}
+          caseId={id}
+          caseNumber={caseData?.id_caso_dinamico}
+        />
+      )}
     </Layout>
   );
 };

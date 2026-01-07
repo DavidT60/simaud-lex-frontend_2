@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  BookOpen, Search, Scale, FileText, Gavel, 
-  ChevronRight 
+  BookOpen, Search, Scale, FileText, Gavel, ExternalLink, 
+  HelpCircle, ChevronRight, Filter, AlertCircle 
 } from 'lucide-react';
 import { procesoJudicialAPI } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
-export const BibliotecaPage = () => {
-  const navigate = useNavigate();
+export const LibraryPage = () => {
   const [activeTab, setActiveTab] = useState<'cases' | 'rules'>('cases');
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,17 +39,6 @@ export const BibliotecaPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getEstadoBadge = (estado: string) => {
-    const badges = {
-      SENTENCIA: "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-200 dark:border-green-700",
-      EN_PROCESO: "bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-200 dark:border-orange-700",
-      PENDIENTE: "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600",
-      ABIERTO: "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-700",
-      CONCILIACION: "bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-200 dark:border-purple-700",
-    };
-    return badges[estado as keyof typeof badges] || "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600";
   };
 
   const filteredCasos = casos.filter(caso => {
@@ -138,22 +125,19 @@ export const BibliotecaPage = () => {
             {activeTab === 'cases' && (
               <div className="grid grid-cols-1 gap-4">
                 {filteredCasos.map((caso) => (
-                  <Card 
-                    key={caso.id} 
-                    className="hover:shadow-lg transition-all dark:bg-gray-800 dark:border-gray-700 group cursor-pointer"
-                    onClick={() => navigate(`/casos/${caso.id}`)}
-                  >
+                  <Card key={caso.id} className="hover:shadow-md transition-shadow dark:bg-gray-800 dark:border-gray-700 group">
                     <CardContent className="p-0">
                       <div className="flex flex-col md:flex-row md:items-center">
                          {/* Case ID & Type */}
                          <div className="p-6 flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                                <Badge variant="outline" className="text-xs font-mono bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-100 border-blue-200 dark:border-blue-700">
+                                <Badge variant="outline" className="text-xs font-mono bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800">
                                     {caso.id_caso_dinamico}
                                 </Badge>
                                 <span className={cn(
                                     "text-xs font-medium px-2 py-0.5 rounded-full border",
-                                    getEstadoBadge(caso.estado)
+                                    caso.estado === 'ABIERTO' ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800" :
+                                    "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600"
                                 )}>
                                     {caso.estado}
                                 </span>
@@ -181,14 +165,7 @@ export const BibliotecaPage = () => {
                                     {caso.recomendacion_custodia ?? 'Pendiente'}
                                 </span>
                             </div>
-                            <Button 
-                              variant="ghost" 
-                              className="mt-4 w-full text-xs h-8 text-primary-600 dark:text-primary-300 hover:bg-white dark:hover:bg-gray-700 group-hover:bg-white dark:group-hover:bg-gray-600"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(`/casos/${caso.id}`);
-                              }}
-                            >
+                            <Button variant="ghost" className="mt-4 w-full text-xs h-8 group-hover:bg-white dark:group-hover:bg-gray-700">
                                 Ver Detalles <ChevronRight className="w-3 h-3 ml-1" />
                             </Button>
                          </div>
@@ -209,6 +186,9 @@ export const BibliotecaPage = () => {
             {/* RULES VIEW */}
             {activeTab === 'rules' && (
               <div className="space-y-4">
+                 <div className="flex gap-2 pb-2 overflow-x-auto">
+                    {/* Optional: Add filters for rules here */}
+                 </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredReglas.map((regla) => (
