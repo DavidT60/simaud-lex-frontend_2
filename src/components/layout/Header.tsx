@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/theme.context';
 import { Button } from '@/components/ui/button';
 import { LogOut, User, Moon, Sun, Settings } from 'lucide-react';
 import { useState } from 'react';
+import { NotificationBell } from "../notifications/NotificationBell";
 
 export const Header = () => {
   const { user, logout } = useAuth();
@@ -11,7 +12,7 @@ export const Header = () => {
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-primary-200 dark:border-gray-700 px-8 py-4 flex items-center justify-between shadow-sm transition-colors duration-300">
+    <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-primary-200 dark:border-gray-700 px-8 py-4 flex items-center justify-between shadow-sm transition-colors duration-300">
       <div>
         <h2 className="text-xl font-semibold text-primary-900 dark:text-white">
           Bienvenido, {user?.name || user?.email}
@@ -22,6 +23,7 @@ export const Header = () => {
       </div>
       
       <div className="flex items-center gap-3">
+        <NotificationBell />
         <div className="flex items-center gap-2 text-primary-600 dark:text-gray-300 px-3 py-2 bg-primary-50 dark:bg-gray-700/50 rounded-lg">
           <User className="w-4 h-4" />
           <span className="text-sm font-medium">{user?.email}</span>

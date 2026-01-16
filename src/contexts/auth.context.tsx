@@ -5,6 +5,7 @@ interface User {
   id: number;
   email: string;
   name: string;
+  role?: string;
 }
 
 interface AuthContextType {
@@ -12,7 +13,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (email: string, password: string, name: string, code: string) => Promise<any>;
   logout: () => void;
   handleSessionExpired: () => void;
 }
@@ -43,7 +44,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Decode JWT to get user info (simple base64 decode)
       const payload = JSON.parse(atob(access_token.split('.')[1]));
-      const userData = { id: payload.sub, email: payload.email, name: email };
+      const userData = { id: payload.sub, email: payload.email, name: email, role: payload.role };
       
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
@@ -53,19 +54,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (email: string, password: string, name: string) => {
+  const register = async (email: string, password: string, name: string, code: string) => {
     try {
-      const response = await authAPI.register({ email, password, name });
+      const response = await authAPI.register({ email, password, name, code });
       const { access_token } = response;
       
       localStorage.setItem('access_token', access_token);
       
       // Decode JWT to get user info
       const payload = JSON.parse(atob(access_token.split('.')[1]));
-      const userData = { id: payload.sub, email: payload.email, name };
+      const userData = { id: payload.sub, email: payload.email, name, role: payload.role };
       
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
+      return response;
     } catch (error) {
       console.error('Register error:', error);
       throw error;

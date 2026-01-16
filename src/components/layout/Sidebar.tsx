@@ -1,17 +1,25 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, FolderOpen, Book, Scale, Settings } from 'lucide-react';
+import { Home, Sparkles, FolderOpen, Book, Scale, Settings, Users, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/auth.context';
 
 const menuItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: Home },
-  { name: 'Simulaciones', path: '/simulaciones', icon: Sparkles },
-  { name: 'Casos', path: '/casos', icon: FolderOpen },
-  { name: 'Biblioteca', path: '/biblioteca', icon: Book },
-  { name: 'Config. Reglas', path: '/configuracion-reglas', icon: Settings }, // Added Settings
+  { name: 'Dashboard', path: '/dashboard', icon: Home, roles: ['Admin', 'Profesor', 'Estudiante'] },
+  { name: 'Simulaciones', path: '/simulaciones', icon: Sparkles, roles: ['Admin', 'Profesor', 'Estudiante'] },
+  { name: 'Casos', path: '/casos', icon: FolderOpen, roles: ['Admin', 'Profesor', 'Estudiante'] },
+  { name: 'Biblioteca', path: '/biblioteca', icon: Book, roles: ['Admin', 'Profesor', 'Estudiante'] },
+  { name: 'Mis Cursos', path: '/cursos', icon: BookOpen, roles: ['Admin', 'Profesor'] },
+  { name: 'Usuarios', path: '/usuarios', icon: Users, roles: ['Admin'] },
+  { name: 'Config. Reglas', path: '/configuracion-reglas', icon: Settings, roles: ['Admin'] },
 ];
 
 export const Sidebar = () => {
   const location = useLocation();
+  const { user } = useAuth();
+  
+  const filteredMenuItems = menuItems.filter(item => 
+    user?.role && item.roles.includes(user.role)
+  );
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-primary to-primary-900 dark:from-gray-900 dark:to-gray-950 text-white flex flex-col shadow-2xl transition-colors duration-300">
@@ -25,7 +33,7 @@ export const Sidebar = () => {
       
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             

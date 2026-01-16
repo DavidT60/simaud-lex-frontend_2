@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/theme.context';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { CasosPage } from './pages/CasosPage';
@@ -13,6 +14,10 @@ import { SimulacionesPage } from './pages/SimulacionesPage';
 import { BibliotecaPage } from './pages/BibliotecaPage';
 import { RuleConfigPage } from './pages/RuleConfigPage';
 import { UserConfigPage } from './pages/UserConfigPage';
+import { UsersPage } from './pages/UsersPage';
+import { CoursesPage } from './pages/CoursesPage';
+import { CourseDetailPage } from './pages/CourseDetailPage';
+import { StudentCasesPage } from './pages/StudentCasesPage';
 
 function App() {
   return (
@@ -25,6 +30,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           
           {/* Protected Routes */}
           <Route
@@ -80,6 +86,38 @@ function App() {
             element={
               <ProtectedRoute>
                 <UserConfigPage />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/cursos"
+            element={
+              <ProtectedRoute>
+                <CoursesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cursos/:id"
+            element={
+              <ProtectedRoute>
+                <CourseDetailPage />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/cursos/student/:studentId/cases"
+            element={
+              <ProtectedRoute>
+                <StudentCasesPage />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/usuarios"
+            element={
+              <ProtectedRoute>
+                <UsersPage />
               </ProtectedRoute>
             }
           />

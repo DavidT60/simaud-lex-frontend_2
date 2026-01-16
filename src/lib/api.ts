@@ -2,8 +2,6 @@ import axios from "axios";
 import { toast } from "sonner";
 // . env reavt|typescript
 
-
-
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 console.log("API_URL: ", API_URL);
 
@@ -34,14 +32,17 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Show toast notification for session expiration
-      toast.error("Su sesión ha expirado. Por favor inicie sesión nuevamente.", {
-        duration: 4000,
-      });
+      toast.error(
+        "Su sesión ha expirado. Por favor inicie sesión nuevamente.",
+        {
+          duration: 4000,
+        }
+      );
 
       // Clear token and redirect to login
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");
-      
+
       // Small delay to allow user to see the toast
       setTimeout(() => {
         window.location.href = "/login";
@@ -57,7 +58,19 @@ export const authAPI = {
     const response = await api.post("/auth/login", credentials);
     return response.data;
   },
-  register: async (data: { email: string; password: string; name: string }) => {
+  sendVerificationCode: async (email: string) => {
+    const response = await api.post("/auth/send-code", { email });
+    return response.data;
+  },
+  sendPasswordResetCode: async (email: string) => {
+    const response = await api.post("/auth/forgot-password", { email });
+    return response.data;
+  },
+  resetPassword: async (data: { email: string; code: string; newPassword: string }) => {
+    const response = await api.post("/auth/reset-password", data);
+    return response.data;
+  },
+  register: async (data: { email: string; password: string; name: string; code: string }) => {
     const response = await api.post("/auth/singin", data);
     return response.data;
   },
@@ -100,6 +113,7 @@ export const procesoJudicialAPI = {
     return response.data;
   },
   create: async (data: any) => {
+    console.log("Post Data Proceso Judicial...");
     const response = await api.post("/proceso-judicial", data);
     return response.data;
   },
@@ -147,6 +161,43 @@ export const procesoJudicialAPI = {
     });
     return response.data;
   },
+  gradeCase: async (id: string, calificacion: number, detalles: string) => {
+    const response = await api.patch(`/proceso-judicial/${id}/grade`, {
+      calificacion,
+      detalles,
+    });
+    return response.data;
+  },
+};
+
+// Course API
+export const courseAPI = {
+  create: async (data: any) => {
+    const response = await api.post("/course", data);
+    return response.data;
+  },
+  getAll: async () => {
+    const response = await api.get("/course");
+    return response.data;
+  },
+  getOne: async (id: string) => {
+    const response = await api.get(`/course/${id}`);
+    return response.data;
+  },
+  addStudent: async (courseId: string, email: string) => {
+    const response = await api.post(`/course/${courseId}/students`, { email });
+    return response.data;
+  },
+  getStudentCases: async (studentId: string) => {
+    const response = await api.get(`/course/student/${studentId}/cases`);
+    return response.data;
+  },
+  removeStudent: async (courseId: string, studentId: string) => {
+    const response = await api.delete(
+      `/course/${courseId}/students/${studentId}`
+    );
+    return response.data;
+  },
 };
 
 // Person API
@@ -176,11 +227,50 @@ export const personAPI = {
 // User API
 export const userAPI = {
   getConfig: async (id: number) => {
-    const response = await api.get(`/user/${id}/config`);
+    const { data } = await api.get(`/user/${id}/config`);
+    return data;
+  },
+  updateConfig: async (id: number, config: any) => {
+    const { data } = await api.patch(`/user/${id}/config`, config);
+    return data;
+  },
+  updatePassword: async (id: number, passwords: any) => {
+    const { data } = await api.patch(`/user/${id}/password`, passwords);
+    return data;
+  },
+  getAll: async () => {
+    const response = await api.get("/user");
     return response.data;
   },
-  updateConfig: async (id: number, data: any) => {
-    const response = await api.patch(`/user/${id}/config`, data);
+  updateRole: async (id: number, role: string) => {
+    const response = await api.patch(`/user/${id}/role`, { role });
+    return response.data;
+  },
+  searchStudents: async (email: string) => {
+    const response = await api.get(`/user/search/students`, {
+      params: { email },
+    });
+    return response.data;
+  },
+};
+
+// Notification API
+export const notificationAPI = {
+  getUnreadCount: async () => {
+    console.log("LOG API NOTIFY");
+    const response = await api.get("/notification/unread-count");
+    return response.data;
+  },
+  getAll: async () => {
+    const response = await api.get("/notification");
+    return response.data;
+  },
+  markAsRead: async (id: string) => {
+    const response = await api.patch(`/notification/${id}/read`);
+    return response.data;
+  },
+  markAllAsRead: async () => {
+    const response = await api.patch("/notification/read-all");
     return response.data;
   },
 };

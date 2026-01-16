@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Gavel, Share2, User } from "lucide-react";
 import { procesoJudicialAPI } from "@/lib/api";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 import { ShareCaseModal } from "@/components/modals/ShareCaseModal";
 import { HechosSimulacionReadOnly } from "@/components/HechosSimulacionReadOnly";
 import { SimilarCasesList } from "@/components/simulation/SimilarCasesList";
@@ -13,6 +13,7 @@ import { SimilarCasesList } from "@/components/simulation/SimilarCasesList";
 export const CaseDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [caseData, setCaseData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -43,7 +44,9 @@ export const CaseDetailPage = () => {
       if (caseData?.sentencia && id) {
         setLoadingSimulation(true);
         try {
-          const historial = await procesoJudicialAPI.getHistorialSimulaciones(id);
+          const historial = await procesoJudicialAPI.getHistorialSimulaciones(
+            id
+          );
           if (historial && historial.length > 0) {
             // Get the most recent simulation
             setSimulationData(historial[0]);
@@ -59,19 +62,19 @@ export const CaseDetailPage = () => {
   }, [caseData, id]);
 
   // Transformar datos del backend al formato del componente
-  const similarCasesMapped = simulationData?.casosSimilares?.map((s: any) => ({
-    casoId: s.casoSimilar?.id,
-    procesoId: s.casoSimilar?.proceso?.id,
-    numeroCaso: s.casoSimilar?.proceso?.id_caso_dinamico || 'N/A',
-    tipoDemanda: s.casoSimilar?.proceso?.tipo_demanda || 'N/A',
-    scoreSimulitud: s.scoreSimulitud,
-    puntuacionMadre: s.puntuacionMadreSimilar,
-    puntuacionPadre: s.puntuacionPadreSimilar,
-    recomendacion: s.recomendacionSimilar,
-    fechaSimulacion: s.fechaComparacion, // Ojo: usar fechaComparacion o fecha_simulacion del similar? Usaremos lo disponible
-    camposCoincidentes: s.camposCoincidentes,
-  })) || [];
-
+  const similarCasesMapped =
+    simulationData?.casosSimilares?.map((s: any) => ({
+      casoId: s.casoSimilar?.id,
+      procesoId: s.casoSimilar?.proceso?.id,
+      numeroCaso: s.casoSimilar?.proceso?.id_caso_dinamico || "N/A",
+      tipoDemanda: s.casoSimilar?.proceso?.tipo_demanda || "N/A",
+      scoreSimulitud: s.scoreSimulitud,
+      puntuacionMadre: s.puntuacionMadreSimilar,
+      puntuacionPadre: s.puntuacionPadreSimilar,
+      recomendacion: s.recomendacionSimilar,
+      fechaSimulacion: s.fechaComparacion, // Ojo: usar fechaComparacion o fecha_simulacion del similar? Usaremos lo disponible
+      camposCoincidentes: s.camposCoincidentes,
+    })) || [];
 
   const getEstadoBadge = (estado: string) => {
     const colors = {
@@ -90,11 +93,17 @@ export const CaseDetailPage = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/casos")}
+            onClick={() => {
+               if (location.state?.from) {
+                  navigate(location.state.from);
+               } else {
+                  navigate("/casos");
+               }
+            }}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Volver a Casos
+            {location.state?.from ? "Volver" : "Volver a Casos"}
           </Button>
         </div>
 
@@ -122,6 +131,50 @@ export const CaseDetailPage = () => {
                 Vista completa del proceso judicial
               </p>
             </div>
+
+            {/* Grading Info Section */}
+            {caseData.is_calificacion && (
+              <Card className="border-green-200 bg-green-50 dark:bg-green-900/20 dark:border-green-800">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 border-b border-green-200 dark:border-green-800 pb-4">
+                    <div>
+                         <h3 className="text-lg font-semibold text-green-900 dark:text-green-100 flex items-center gap-2">
+                        <Gavel className="w-5 h-5" />
+                        Calificación del Caso
+                      </h3>
+                      <p className="text-sm text-green-700 dark:text-green-300">Este caso ha sido evaluado por un profesor.</p>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                         <div className="flex items-baseline gap-1 justify-end">
+                          <span className="text-4xl font-bold text-green-700 dark:text-green-400">
+                            {caseData.calificacion}
+                          </span>
+                          <span className="text-sm text-green-600 dark:text-green-500 font-medium">/ 100</span>
+                        </div>
+                         {caseData.calificadoPor && (
+                          <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                              <span className="font-semibold">Evaluado por:</span> {caseData.calificadoPor.name}
+                          </div>
+                       )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {caseData.detallesCalificacion && (
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-green-100 dark:border-green-900/30">
+                      <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">
+                        Comentarios y Detalles de la Evaluación
+                      </h4>
+                      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm leading-relaxed">
+                        {caseData.detallesCalificacion}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Main Case Information */}
             <Card>
@@ -246,8 +299,6 @@ export const CaseDetailPage = () => {
               </CardContent>
             </Card>
 
-
-
             {caseData.sentencia ? (
               <Card className="border-2 border-primary-200 bg-slate-50 dark:bg-slate-800 dark:border-primary-700">
                 <CardHeader>
@@ -267,16 +318,20 @@ export const CaseDetailPage = () => {
                     </Button>
                   </div>
                   {/* Creator Info */}
-                  {(caseData.sentencia.created_by_name || caseData.sentencia.created_by_email) && (
+                  {(caseData.sentencia.created_by_name ||
+                    caseData.sentencia.created_by_email) && (
                     <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                       <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                         <User className="w-4 h-4" />
                         <span>
-                          Creado por: <span className="font-medium text-gray-900 dark:text-gray-200">
-                            {caseData.sentencia.created_by_name || 'Sistema'}
+                          Creado por:{" "}
+                          <span className="font-medium text-gray-900 dark:text-gray-200">
+                            {caseData.sentencia.created_by_name || "Sistema"}
                           </span>
                           {caseData.sentencia.created_by_email && (
-                            <span className="ml-2">({caseData.sentencia.created_by_email})</span>
+                            <span className="ml-2">
+                              ({caseData.sentencia.created_by_email})
+                            </span>
                           )}
                         </span>
                       </div>
@@ -289,17 +344,19 @@ export const CaseDetailPage = () => {
                   </div>
                 </CardContent>
               </Card>
-            ) : caseData.estado === 'SENTENCIA' ? (
+            ) : caseData.estado === "SENTENCIA" ? (
               <Card className="border-2 border-yellow-200 bg-yellow-50">
-                 <CardContent className="p-6">
-                    <p className="text-yellow-800 font-medium flex items-center gap-2">
-                       <Gavel className="w-5 h-5" />
-                       El caso está marcado como SENTENCIA, pero no se encontró el documento de fallo asociado.
-                    </p>
-                    <p className="text-sm text-yellow-700 mt-1">
-                       Esto puede ocurrir si la simulación no se guardó correctamente. Intente generar la simulación nuevamente.
-                    </p>
-                 </CardContent>
+                <CardContent className="p-6">
+                  <p className="text-yellow-800 font-medium flex items-center gap-2">
+                    <Gavel className="w-5 h-5" />
+                    El caso está marcado como SENTENCIA, pero no se encontró el
+                    documento de fallo asociado.
+                  </p>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    Esto puede ocurrir si la simulación no se guardó
+                    correctamente. Intente generar la simulación nuevamente.
+                  </p>
+                </CardContent>
               </Card>
             ) : null}
 
@@ -323,14 +380,14 @@ export const CaseDetailPage = () => {
                     <>
                       <HechosSimulacionReadOnly data={simulationData} />
                       <div className="mt-8 border-t pt-8">
-                         <SimilarCasesList casos={similarCasesMapped} />
+                        <SimilarCasesList casos={similarCasesMapped} />
                       </div>
                     </>
                   )}
                 </CardContent>
               </Card>
             )}
-            
+
             {/* Parties Involved */}
             {caseData.partes && caseData.partes.length > 0 && (
               <Card>

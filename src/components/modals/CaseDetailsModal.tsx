@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { procesoJudicialAPI } from "@/lib/api";
-import { Gavel, Share2, User } from "lucide-react";
+import { Gavel, Share2, User, Sparkles } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 import { Button } from "@/components/ui/button";
 import { ShareCaseModal } from "@/components/modals/ShareCaseModal";
@@ -184,6 +184,38 @@ export const CaseDetailsModal: React.FC<CaseDetailsModalProps> = ({
                 </p>
               </div>
             ) : null}
+
+            {/* Grading Info */}
+            {caseData.is_calificacion && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-4 shadow-sm mt-4">
+                <h3 className="text-md font-semibold text-green-900 dark:text-green-100 flex items-center gap-2 border-b border-green-200 dark:border-green-800 pb-2 mb-3">
+                  <Sparkles className="w-4 h-4" />
+                  Calificación del Caso
+                </h3>
+                <div className="flex items-center justify-between mb-3">
+                   <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-bold text-green-700 dark:text-green-400">
+                      {caseData.calificacion}
+                    </span>
+                    <span className="text-sm text-green-600 dark:text-green-500">/ 100</span>
+                  </div>
+                  {caseData.calificadoPor && (
+                     <div className="text-right text-xs text-green-600 dark:text-green-400">
+                        <p className="font-medium">Calificado por:</p>
+                        <p>{caseData.calificadoPor.name}</p>
+                        <p className="opacity-75">{caseData.calificadoPor.email}</p>
+                     </div>
+                  )}
+                </div>
+                {caseData.detallesCalificacion && (
+                  <div className="mt-3 bg-white dark:bg-gray-800 p-3 rounded border border-green-100 dark:border-green-900/30">
+                     <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                        {caseData.detallesCalificacion}
+                     </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Simulation Data */}
             {simulationData && (
